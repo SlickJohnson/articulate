@@ -7,21 +7,22 @@
 //
 
 import UIKit
+import SafariServices
 
-typealias URLList = [URL?]?
+typealias URLList = [URL?]
 
 class ViewController: UIViewController {
   /// Displays urls to articles.
   @IBOutlet weak var tableView: UITableView!
   /// Urls
-  var urls: URLList
+  var urls: URLList?
 
   override func viewDidLoad() {
     super.viewDidLoad()
     urls = [
       URL(string: "https://developer.apple.com/documentation/safariservices/sfsafariviewcontroller"), // Test normal page.
       URL(string: "https://developer.apple.com/documentation/webkit/wkwebview"),
-      URL(string: "https://www.youtube.com/watch?v=mJl68R5z1vI"), // Test page with video.
+      URL(string: "http://www.karenx.com/blog/how-to-become-a-designer-without-going-to-design-school/"), // Test page with video.
     ]
 
     tableView.dataSource = self
@@ -50,6 +51,14 @@ extension ViewController: UITableViewDataSource {
 }
 
 extension ViewController: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    if let urls = urls, let url = urls[indexPath.row] {
+      let config = SFSafariViewController.Configuration()
+      config.entersReaderIfAvailable = true
 
+      let safarivc = SFSafariViewController(url: url, configuration: config)
+      navigationController?.pushViewController(safarivc, animated: true)
+    }
+  }
 }
 
